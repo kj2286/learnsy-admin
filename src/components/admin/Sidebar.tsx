@@ -96,7 +96,7 @@ export default function Sidebar() {
       <div className="flex items-center h-14 px-4 border-b border-admin-border">
         {!collapsed && (
           <span className="text-lg font-bold text-white tracking-tight">
-            Learnsy
+            내신인강 관리자
           </span>
         )}
       </div>

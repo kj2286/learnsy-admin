@@ -9,8 +9,8 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Learnsy 관리자",
-  description: "Learnsy 관리자 시스템",
+  title: "내신인강 관리자",
+  description: "내신인강 관리자 시스템",
 };
 
 export default function RootLayout({
