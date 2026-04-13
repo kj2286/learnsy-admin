@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learnsy Workers - Isometric View</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1b1d2a;
+    font-family: 'DotGothic16', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: #e0e0e0;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 24px 16px 8px;
+  }
+  .header h1 { font-size: 14px; color: #7fdbca; letter-spacing: 3px; margin-bottom: 4px; }
+  .header .sub { font-size: 10px; color: #4a5568; }
+  .header .time { font-size: 10px; color: #f6ad55; margin-top: 4px; }
+
+  .main {
+    display: flex;
+    gap: 20px;
+    max-width: 1260px;
+    margin: 0 auto;
+    padding: 16px;
+    align-items: flex-start;
+  }
+
+  /* === TEAM LEAD STRIP === */
+  .lead-strip {
+    max-width: 1260px;
+    margin: 0 auto 0;
+    padding: 0 16px;
+  }
+  .lead-room {
+    background: linear-gradient(135deg, #1e2a1e 0%, #1a2230 100%);
+    border: 2px solid #7fdbca;
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .lead-room::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #7fdbca, #64b5f6, #ce93d8);
+    border-radius: 10px 10px 0 0;
+  }
+  .lead-scene {
+    width: 100px;
+    height: 90px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .lead-char {
+    position: absolute;
+    bottom: 10px; left: 20px;
+    z-index: 4;
+  }
+  .lead-char .p-head {
+    width: 16px; height: 16px;
+    background: #ffd5a0;
+    margin: 0 auto 1px;
+    border-radius: 3px;
+    position: relative;
+  }
+  .lead-char .p-head::before {
+    content: '';
+    position: absolute;
+    top: 1px; left: 0;
+    width: 16px; height: 7px;
+    background: #2a2a2a;
+    border-radius: 3px 3px 0 0;
+  }
+  .lead-char .p-head::after {
+    content: '';
+    position: absolute;
+    top: 2px; right: -2px;
+    width: 4px; height: 4px;
+    background: #f6ad55;
+    border-radius: 50%;
+    opacity: 0.8;
+  }
+  .lead-char .p-eyes {
+    position: absolute;
+    top: 8px; left: 4px;
+    width: 8px; height: 2px;
+    display: flex; gap: 3px;
+  }
+  .lead-char .p-eyes::before, .lead-char .p-eyes::after {
+    content: '';
+    width: 2px; height: 2px;
+    background: #333;
+    border-radius: 1px;
+    animation: blink 4s ease infinite;
+  }
+  .lead-char .p-body {
+    width: 14px; height: 12px;
+    margin: 0 auto;
+    background: #7fdbca;
+    border-radius: 2px;
+  }
+  .lead-char .p-arms {
+    display: flex;
+    justify-content: space-between;
+    width: 22px;
+    margin: 0 auto;
+    margin-top: -8px;
+  }
+  .lead-char .p-arm {
+    width: 4px; height: 8px;
+    background: #7fdbca;
+    border-radius: 1px;
+    transform-origin: top center;
+  }
+  .lead-char .p-arm.left { animation: point 2s ease-in-out infinite; }
+  .lead-char .p-arm.right { animation: wave 2s ease-in-out infinite; }
+  /* Lead's whiteboard */
+  .lead-board {
+    position: absolute;
+    top: 6px; right: 4px;
+    width: 40px; height: 50px;
+    background: #f5f5f0;
+    border: 2px solid #888;
+    border-radius: 2px;
+    padding: 3px;
+  }
+  .lead-board .line {
+    height: 2px;
+    margin-bottom: 3px;
+    border-radius: 1px;
+  }
+
+  .lead-info {
+    flex: 1;
+  }
+  .lead-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .lead-avatar {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: #7fdbca;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #1b1d2a;
+    font-weight: bold;
+  }
+  .lead-name { font-size: 12px; color: #7fdbca; font-weight: bold; letter-spacing: 1px; }
+  .lead-role-tag {
+    font-size: 8px;
+    background: rgba(127,219,202,0.15);
+    color: #7fdbca;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(127,219,202,0.3);
+    letter-spacing: 1px;
+  }
+  .lead-desc {
+    font-size: 9px;
+    color: #888;
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .lead-done-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .lead-done-tag {
+    font-size: 8px;
+    background: rgba(92,184,92,0.1);
+    color: #5cb85c;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid rgba(92,184,92,0.2);
+  }
+
+  /* Org chart connector */
+  .org-connector {
+    max-width: 1260px;
+    margin: 0 auto;
+    padding: 0 16px;
+    display: flex;
+    justify-content: center;
+    height: 24px;
+    position: relative;
+  }
+  .org-line-v {
+    width: 2px;
+    height: 100%;
+    background: #333;
+  }
+  .org-line-h {
+    position: absolute;
+    bottom: 0;
+    left: calc(16px + 12.5%);
+    right: calc(16px + 12.5% + 300px);
+    height: 2px;
+    background: #333;
+  }
+  .org-dots {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    left: calc(16px + 12.5%);
+    right: calc(16px + 12.5%);
+    pointer-events: none;
+  }
+  .org-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-top: -2px;
+  }
+
+  /* === ROOMS === */
+  .rooms {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    flex: 1;
+  }
+
+  .room {
+    position: relative;
+    background: linear-gradient(135deg, #2a2d3e 0%, #1e2130 100%);
+    border: 2px solid var(--c);
+    border-radius: 12px;
+    padding: 14px;
+    overflow: hidden;
+    min-height: 300px;
+  }
+  .room::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--c);
+    border-radius: 10px 10px 0 0;
+  }
+
+  .room-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .room-avatar {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    background: var(--c);
+    color: #fff;
+    font-weight: bold;
+  }
+  .room-name {
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--c);
+    letter-spacing: 1px;
+  }
+
+  /* Role badge */
+  .role-badge {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 8px;
+    background: rgba(255,255,255,0.05);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #999;
+    letter-spacing: 0.5px;
+  }
+
+  /* Position card under header */
+  .position-card {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    padding: 5px 8px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 6px;
+    border-left: 3px solid var(--c);
+  }
+  .position-emoji { font-size: 14px; }
+  .position-info {}
+  .position-title {
+    font-size: 10px;
+    color: var(--c);
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+  .position-desc {
+    font-size: 8px;
+    color: #777;
+    margin-top: 1px;
+  }
+
+  /* Scene */
+  .scene {
+    width: 100%;
+    height: 110px;
+    position: relative;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+
+  .wall-back {
+    position: absolute;
+    bottom: 40px;
+    left: 10px;
+    right: 10px;
+    height: 70px;
+    background: linear-gradient(180deg, #363b54 0%, #2d3048 100%);
+    border-radius: 4px 4px 0 0;
+    border-bottom: 2px solid #444;
+  }
+  /* Window on wall */
+  .wall-back::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 24px;
+    background: linear-gradient(180deg, #1a3a5c 0%, #0d2137 100%);
+    border: 2px solid #4a5568;
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(100, 180, 255, 0.1);
+  }
+
+  .iso-desk {
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 72px;
+    height: 14px;
+    background: #6d5243;
+    border-radius: 2px;
+    box-shadow: 0 3px 0 #5a4436, 0 6px 0 #5a4436;
+    z-index: 3;
+  }
+  .iso-desk::before {
+    content: '';
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 26px;
+    height: 16px;
+    background: #2a2d3e;
+    border: 2px solid #555;
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(100, 200, 255, 0.2);
+  }
+  .iso-desk::after {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18px;
+    height: 9px;
+    border-radius: 1px;
+    animation: screen-glow 2s ease-in-out infinite;
+  }
+  .room:nth-child(1) .iso-desk::after { background: #4a90d9; }
+  .room:nth-child(2) .iso-desk::after { background: #5cb85c; }
+  .room:nth-child(3) .iso-desk::after { background: #d9924a; }
+  .room:nth-child(4) .iso-desk::after { background: #a855f7; }
+
+  .iso-chair {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 8px;
+    background: #444;
+    border-radius: 3px;
+    z-index: 2;
+  }
+  .iso-chair::before {
+    content: '';
+    position: absolute;
+    top: -12px; left: 2px;
+    width: 12px; height: 12px;
+    background: #3a3a3a;
+    border-radius: 2px;
+  }
+
+  .pixel-char {
+    position: absolute;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    image-rendering: pixelated;
+  }
+  .p-head {
+    width: 14px; height: 14px;
+    background: #ffd5a0;
+    margin: 0 auto 1px;
+    border-radius: 3px;
+    position: relative;
+  }
+  .p-head::before {
+    content: '';
+    position: absolute;
+    top: 2px; left: 0;
+    width: 14px; height: 6px;
+    border-radius: 3px 3px 0 0;
+  }
+  .room:nth-child(1) .p-head::before { background: #3a3a3a; }
+  .room:nth-child(2) .p-head::before { background: #5a3a2a; }
+  .room:nth-child(3) .p-head::before { background: #8b6914; }
+  .room:nth-child(4) .p-head::before { background: #4a2a4a; }
+  /* Glasses for W1 */
+  .room:nth-child(1) .p-head::after {
+    content: '';
+    position: absolute;
+    top: 6px; left: 2px;
+    width: 10px; height: 3px;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 1px;
+  }
+  /* Headphones for W4 */
+  .room:nth-child(4) .p-head::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -2px;
+    width: 18px; height: 8px;
+    border: 2px solid #666;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+  }
+
+  .p-eyes {
+    position: absolute;
+    top: 7px; left: 3px;
+    width: 8px; height: 2px;
+    display: flex; gap: 3px;
+  }
+  .p-eyes::before, .p-eyes::after {
+    content: '';
+    width: 2px; height: 2px;
+    background: #333;
+    border-radius: 1px;
+    animation: blink 4s ease infinite;
+  }
+  .p-body {
+    width: 12px; height: 10px;
+    margin: 0 auto;
+    border-radius: 2px;
+    background: var(--c);
+  }
+  .p-arms {
+    display: flex;
+    justify-content: space-between;
+    width: 20px;
+    margin: 0 auto;
+    margin-top: -8px;
+  }
+  .p-arm {
+    width: 4px; height: 8px;
+    background: var(--c);
+    border-radius: 1px;
+    transform-origin: top center;
+  }
+  .p-arm.left { animation: type-l 0.35s ease-in-out infinite alternate; }
+  .p-arm.right { animation: type-r 0.35s ease-in-out infinite alternate-reverse; }
+
+  /* Room items */
+  .item-plant {
+    position: absolute;
+    bottom: 42px;
+    z-index: 5;
+  }
+  .item-plant .pot {
+    width: 10px; height: 8px;
+    background: #c0785c;
+    border-radius: 1px 1px 3px 3px;
+    margin: 0 auto;
+  }
+  .item-plant .leaf {
+    width: 14px; height: 10px;
+    background: #5cb85c;
+    border-radius: 50% 50% 0 0;
+    margin: 0 auto -2px;
+  }
+
+  .item-coffee {
+    position: absolute;
+    bottom: 36px;
+    z-index: 5;
+  }
+  .cup {
+    width: 7px; height: 6px;
+    background: #f5f5f5;
+    border-radius: 0 0 2px 2px;
+    position: relative;
+  }
+  .cup::after {
+    content: '';
+    position: absolute;
+    top: -6px; left: 1px;
+    width: 5px; height: 5px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50%;
+    animation: steam 1.5s ease infinite;
+  }
+
+  .item-books {
+    position: absolute;
+    bottom: 42px;
+    z-index: 5;
+  }
+  .book-stack { display: flex; flex-direction: column; gap: 1px; }
+  .book-stack .b { width: 12px; height: 3px; border-radius: 1px; }
+
+  .postit {
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 1px;
+    z-index: 2;
+  }
+
+  .code-particles {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 6;
+    pointer-events: none;
+  }
+  .code-p {
+    position: absolute;
+    font-size: 7px;
+    color: var(--c);
+    opacity: 0;
+    animation: float-code 2.5s ease-out infinite;
+  }
+  .code-p:nth-child(1) { left: -10px; animation-delay: 0s; }
+  .code-p:nth-child(2) { left: 2px; animation-delay: 0.8s; }
+  .code-p:nth-child(3) { left: 14px; animation-delay: 1.6s; }
+
+  /* Task panel */
+  .task-panel {
+    margin-top: 4px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 6px;
+    padding: 8px;
+  }
+  .task-panel-title {
+    font-size: 9px;
+    color: #888;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9px;
+    padding: 2px 0;
+    color: #aaa;
+  }
+  .task-item.done { color: #555; text-decoration: line-through; }
+  .task-item.active { color: var(--c); }
+  .task-check {
+    width: 10px; height: 10px;
+    border: 1px solid #555;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7px;
+    flex-shrink: 0;
+  }
+  .task-item.done .task-check { background: #2d4a2d; border-color: #5cb85c; color: #5cb85c; }
+  .task-item.active .task-check { border-color: var(--c); animation: pulse-border 1s ease infinite; }
+  .task-item.active::after {
+    content: '';
+    width: 4px; height: 4px;
+    background: var(--c);
+    border-radius: 50%;
+    animation: blink-dot 0.8s ease infinite;
+    margin-left: auto;
+  }
+
+  /* === RIGHT PANEL === */
+  .plan-panel {
+    width: 280px;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, #232636 0%, #1e2130 100%);
+    border: 2px solid #333;
+    border-radius: 12px;
+    padding: 16px;
+    position: sticky;
+    top: 16px;
+  }
+  .plan-title {
+    font-size: 12px;
+    color: #7fdbca;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .plan-title .icon {
+    width: 16px; height: 16px;
+    background: #7fdbca;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1b1d2a;
+    font-size: 10px;
+  }
+  .plan-section { margin-bottom: 12px; }
+  .plan-section-title { font-size: 10px; color: #f6ad55; margin-bottom: 6px; letter-spacing: 1px; }
+  .plan-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 9px;
+    padding: 3px 0;
+    color: #888;
+  }
+  .plan-item.done { color: #555; text-decoration: line-through; }
+  .plan-item.active { color: #e0e0e0; }
+  .plan-item.pending { color: #666; }
+  .plan-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .plan-item.done .plan-dot { background: #5cb85c; }
+  .plan-item.active .plan-dot { background: var(--active-color, #f6ad55); animation: blink-dot 1s ease infinite; }
+  .plan-item.pending .plan-dot { background: #444; }
+  /* Worker tag in plan */
+  .plan-worker-tag {
+    font-size: 7px;
+    padding: 1px 4px;
+    border-radius: 2px;
+    margin-left: auto;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+  }
+
+  .progress-summary {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .progress-track {
+    height: 8px;
+    background: #1a1c2e;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+  }
+  .progress-fill { height: 100%; transition: width 1s ease; }
+  .progress-fill.teal { background: #7fdbca; }
+  .progress-fill.blue { background: #64b5f6; }
+  .progress-fill.green { background: #81c784; }
+  .progress-fill.orange { background: #ffb74d; }
+  .progress-fill.purple { background: #ce93d8; }
+
+  .stats-row { display: flex; gap: 8px; margin-top: 10px; }
+  .stat-box { flex: 1; background: rgba(0,0,0,0.2); border-radius: 6px; padding: 6px; text-align: center; }
+  .stat-num { font-size: 16px; font-weight: bold; color: #7fdbca; }
+  .stat-label { font-size: 8px; color: #666; margin-top: 2px; }
+
+  /* Team roster */
+  .team-roster {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+  }
+  .team-roster-title {
+    font-size: 9px;
+    color: #888;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  .roster-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 0;
+  }
+  .roster-dot {
+    width: 8px; height: 8px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .roster-name { font-size: 9px; color: #ccc; }
+  .roster-role { font-size: 8px; color: #777; margin-left: auto; }
+
+  /* Animations */
+  @keyframes blink { 0%, 90%, 100% { opacity: 1; } 95% { opacity: 0; } }
+  @keyframes type-l { 0% { transform: rotate(0deg) translateY(0); } 100% { transform: rotate(-20deg) translateY(-2px); } }
+  @keyframes type-r { 0% { transform: rotate(0deg) translateY(0); } 100% { transform: rotate(20deg) translateY(-2px); } }
+  @keyframes point { 0%,100% { transform: rotate(-30deg); } 50% { transform: rotate(-50deg); } }
+  @keyframes wave { 0%,100% { transform: rotate(20deg); } 50% { transform: rotate(45deg); } }
+  @keyframes screen-glow { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
+  @keyframes steam { 0%, 100% { opacity: 0; transform: translateY(0) scale(0.5); } 50% { opacity: 0.5; transform: translateY(-4px) scale(1); } }
+  @keyframes pulse-border { 0%, 100% { border-color: var(--c); } 50% { border-color: transparent; } }
+  @keyframes blink-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  @keyframes float-code { 0% { transform: translateY(0); opacity: 0.6; } 100% { transform: translateY(-20px); opacity: 0; } }
+
+  .room:nth-child(1) { --c: #64b5f6; }
+  .room:nth-child(2) { --c: #81c784; }
+  .room:nth-child(3) { --c: #ffb74d; }
+  .room:nth-child(4) { --c: #ce93d8; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>LEARNSY BUILD STATION</h1>
+  <div class="sub">1 LEAD + 4 WORKERS // PARALLEL EXECUTION</div>
+  <div class="time" id="clock"></div>
+</div>
+
+<!-- Team Lead -->
+<div class="lead-strip">
+  <div class="lead-room">
+    <div class="lead-scene">
+      <div class="lead-board">
+        <div class="line" style="width:80%;background:#64b5f6;"></div>
+        <div class="line" style="width:60%;background:#81c784;"></div>
+        <div class="line" style="width:90%;background:#ffb74d;"></div>
+        <div class="line" style="width:50%;background:#ce93d8;"></div>
+        <div class="line" style="width:70%;background:#888;"></div>
+        <div class="line" style="width:40%;background:#888;"></div>
+      </div>
+      <div class="lead-char">
+        <div class="p-head"><div class="p-eyes"></div></div>
+        <div class="p-body"></div>
+        <div class="p-arms"><div class="p-arm left"></div><div class="p-arm right"></div></div>
+      </div>
+    </div>
+    <div class="lead-info">
+      <div class="lead-header">
+        <div class="lead-avatar">TL</div>
+        <div class="lead-name">TEAM LEAD</div>
+        <div class="lead-role-tag">PM / ARCHITECT / DESIGNER</div>
+      </div>
+      <div class="position-card" style="border-left-color: #7fdbca; background: rgba(127,219,202,0.05);">
+        <div class="position-info">
+          <div class="position-title" style="color:#7fdbca;">기획 &middot; 설계 &middot; 디자인</div>
+          <div class="position-desc">프로젝트 구조 설계, 타입/목업 데이터 정의, 공통 컴포넌트 &amp; 레이아웃 구현, 워커 태스크 분배 &amp; 모니터링</div>
+        </div>
+      </div>
+      <div class="lead-done-list">
+        <div class="lead-done-tag">Next.js 셋업</div>
+        <div class="lead-done-tag">타입 정의</div>
+        <div class="lead-done-tag">목업 데이터 x7</div>
+        <div class="lead-done-tag">Admin 사이드바</div>
+        <div class="lead-done-tag">Teacher 네비</div>
+        <div class="lead-done-tag">DataTable</div>
+        <div class="lead-done-tag">FilterBar</div>
+        <div class="lead-done-tag">StatusBadge</div>
+        <div class="lead-done-tag">SearchInput</div>
+        <div class="lead-done-tag">DatePicker</div>
+        <div class="lead-done-tag">Dropdown</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="rooms">
+
+    <!-- Worker 1 - Blue / Data Engineer -->
+    <div class="room">
+      <div class="room-header">
+        <div class="room-avatar">W1</div>
+        <div class="room-name">WORKER-1</div>
+        <div class="role-badge">executor</div>
+      </div>
+      <div class="position-card">
+        <div class="position-emoji">📊</div>
+        <div class="position-info">
+          <div class="position-title">데이터 시각화 엔지니어</div>
+          <div class="position-desc">차트, 매출 대시보드, 결제 테이블 전문</div>
+        </div>
+      </div>
+      <div class="scene">
+        <div class="wall-back">
+          <div class="postit" style="top:10px;right:12px;background:#ff9999;"></div>
+          <div class="postit" style="top:18px;right:24px;background:#99ccff;"></div>
+          <div class="postit" style="top:8px;right:36px;background:#ffffaa;"></div>
+        </div>
+        <div class="item-books" style="left:16px;">
+          <div class="book-stack">
+            <div class="b" style="background:#e74c3c;"></div>
+            <div class="b" style="background:#3498db;width:14px;"></div>
+            <div class="b" style="background:#2ecc71;"></div>
+          </div>
+        </div>
+        <div class="item-plant" style="right:16px;"><div class="leaf"></div><div class="pot"></div></div>
+        <div class="item-coffee" style="right:44px;"><div class="cup"></div></div>
+        <div class="iso-desk"></div>
+        <div class="iso-chair"></div>
+        <div class="pixel-char">
+          <div class="p-head"><div class="p-eyes"></div></div>
+          <div class="p-body"></div>
+          <div class="p-arms"><div class="p-arm left"></div><div class="p-arm right"></div></div>
+        </div>
+        <div class="code-particles">
+          <div class="code-p">&lt;/&gt;</div>
+          <div class="code-p">chart</div>
+          <div class="code-p">{ }</div>
+        </div>
+      </div>
+      <div class="task-panel">
+        <div class="task-panel-title">TASKS</div>
+        <div class="task-item done"><div class="task-check">&#10003;</div>account.tsx (내 계정)</div>
+        <div class="task-item done"><div class="task-check">&#10003;</div>payments.tsx (결제내역)</div>
+        <div class="task-item active"><div class="task-check"></div>sales-period.tsx (매출 차트)</div>
+        <div class="task-item"><div class="task-check"></div>sales-product.tsx (상품별)</div>
+      </div>
+    </div>
+
+    <!-- Worker 2 - Green / Feature Developer -->
+    <div class="room">
+      <div class="room-header">
+        <div class="room-avatar">W2</div>
+        <div class="room-name">WORKER-2</div>
+        <div class="role-badge">executor</div>
+      </div>
+      <div class="position-card">
+        <div class="position-emoji">⚙️</div>
+        <div class="position-info">
+          <div class="position-title">기능 개발자</div>
+          <div class="position-desc">쿠폰, 강의부여, AI 피드백 등 비즈니스 로직</div>
+        </div>
+      </div>
+      <div class="scene">
+        <div class="wall-back">
+          <div class="postit" style="top:6px;left:12px;background:#aaffaa;"></div>
+          <div class="postit" style="top:14px;left:24px;background:#ffaaff;"></div>
+        </div>
+        <div class="item-books" style="right:16px;">
+          <div class="book-stack">
+            <div class="b" style="background:#9b59b6;"></div>
+            <div class="b" style="background:#f39c12;width:10px;"></div>
+          </div>
+        </div>
+        <div class="iso-desk"></div>
+        <div class="iso-chair"></div>
+        <div class="pixel-char">
+          <div class="p-head"><div class="p-eyes"></div></div>
+          <div class="p-body"></div>
+          <div class="p-arms"><div class="p-arm left"></div><div class="p-arm right"></div></div>
+        </div>
+        <div class="code-particles">
+          <div class="code-p">fn()</div>
+          <div class="code-p">tsc</div>
+          <div class="code-p">ok!</div>
+        </div>
+      </div>
+      <div class="task-panel">
+        <div class="task-panel-title">TASKS</div>
+        <div class="task-item done"><div class="task-check">&#10003;</div>assign-course.tsx (강의부여)</div>
+        <div class="task-item done"><div class="task-check">&#10003;</div>coupons.tsx (쿠폰발급)</div>
+        <div class="task-item active"><div class="task-check"></div>ai-feedback.tsx (AI피드백)</div>
+        <div class="task-item"><div class="task-check"></div>marketing.tsx (마케팅)</div>
+      </div>
+    </div>
+
+    <!-- Worker 3 - Orange / Fullstack -->
+    <div class="room">
+      <div class="room-header">
+        <div class="room-avatar">W3</div>
+        <div class="room-name">WORKER-3</div>
+        <div class="role-badge">executor</div>
+      </div>
+      <div class="position-card">
+        <div class="position-emoji">🏗️</div>
+        <div class="position-info">
+          <div class="position-title">풀스택 빌더</div>
+          <div class="position-desc">강사 관리, 학생 CRUD, 배송/도서 시스템 담당 (최다 5페이지)</div>
+        </div>
+      </div>
+      <div class="scene">
+        <div class="wall-back">
+          <div class="postit" style="top:12px;right:16px;background:#ffcc99;"></div>
+          <div class="postit" style="top:6px;right:28px;background:#ccffcc;"></div>
+          <div class="postit" style="top:16px;right:40px;background:#ffcccc;"></div>
+          <div class="postit" style="top:8px;left:14px;background:#ccccff;"></div>
+        </div>
+        <div class="item-plant" style="left:16px;"><div class="leaf"></div><div class="pot"></div></div>
+        <div class="item-coffee" style="left:44px;"><div class="cup"></div></div>
+        <div class="iso-desk"></div>
+        <div class="iso-chair"></div>
+        <div class="pixel-char">
+          <div class="p-head"><div class="p-eyes"></div></div>
+          <div class="p-body"></div>
+          <div class="p-arms"><div class="p-arm left"></div><div class="p-arm right"></div></div>
+        </div>
+        <div class="code-particles">
+          <div class="code-p">[id]</div>
+          <div class="code-p">map</div>
+          <div class="code-p">tsx</div>
+        </div>
+      </div>
+      <div class="task-panel">
+        <div class="task-panel-title">TASKS (5)</div>
+        <div class="task-item done"><div class="task-check">&#10003;</div>students.tsx (수강관리)</div>
+        <div class="task-item active"><div class="task-check"></div>student-info.tsx (학생정보)</div>
+        <div class="task-item"><div class="task-check"></div>courses.tsx (강의등록)</div>
+        <div class="task-item"><div class="task-check"></div>shipping.tsx (배송관리)</div>
+        <div class="task-item"><div class="task-check"></div>books.tsx (책등록)</div>
+      </div>
+    </div>
+
+    <!-- Worker 4 - Purple / UI/UX -->
+    <div class="room">
+      <div class="room-header">
+        <div class="room-avatar">W4</div>
+        <div class="room-name">WORKER-4</div>
+        <div class="role-badge">executor</div>
+      </div>
+      <div class="position-card">
+        <div class="position-emoji">🎨</div>
+        <div class="position-info">
+          <div class="position-title">UI/UX 개발자</div>
+          <div class="position-desc">칸반 보드, 메신저 채팅 등 인터랙티브 UI 전문</div>
+        </div>
+      </div>
+      <div class="scene">
+        <div class="wall-back">
+          <div class="postit" style="top:10px;left:16px;background:#e0aaff;"></div>
+          <div class="postit" style="top:18px;left:28px;background:#aad4ff;"></div>
+        </div>
+        <div class="item-books" style="left:16px;">
+          <div class="book-stack">
+            <div class="b" style="background:#e91e63;width:14px;"></div>
+            <div class="b" style="background:#00bcd4;"></div>
+            <div class="b" style="background:#ff9800;width:10px;"></div>
+          </div>
+        </div>
+        <div class="item-plant" style="right:16px;"><div class="leaf"></div><div class="pot"></div></div>
+        <div class="iso-desk"></div>
+        <div class="iso-chair"></div>
+        <div class="pixel-char">
+          <div class="p-head"><div class="p-eyes"></div></div>
+          <div class="p-body"></div>
+          <div class="p-arms"><div class="p-arm left"></div><div class="p-arm right"></div></div>
+        </div>
+        <div class="code-particles">
+          <div class="code-p">msg</div>
+          <div class="code-p">ui</div>
+          <div class="code-p">css</div>
+        </div>
+      </div>
+      <div class="task-panel">
+        <div class="task-panel-title">TASKS</div>
+        <div class="task-item active"><div class="task-check"></div>notices.tsx (공지사항)</div>
+        <div class="task-item"><div class="task-check"></div>questions.tsx (칸반 보드)</div>
+        <div class="task-item"><div class="task-check"></div>chat.tsx (메신저 UI)</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Panel -->
+  <div class="plan-panel">
+    <div class="plan-title">
+      <div class="icon">P</div>
+      BUILD PLAN
+    </div>
+
+    <div class="plan-section">
+      <div class="plan-section-title">PHASE 1 - SETUP (Lead)</div>
+      <div class="plan-item done"><div class="plan-dot"></div>프로젝트 생성 &amp; 의존성<span class="plan-worker-tag" style="background:rgba(127,219,202,0.1);color:#7fdbca;">TL</span></div>
+      <div class="plan-item done"><div class="plan-dot"></div>타입 &amp; 목업 데이터 x7<span class="plan-worker-tag" style="background:rgba(127,219,202,0.1);color:#7fdbca;">TL</span></div>
+      <div class="plan-item done"><div class="plan-dot"></div>레이아웃 &amp; 공통 컴포넌트<span class="plan-worker-tag" style="background:rgba(127,219,202,0.1);color:#7fdbca;">TL</span></div>
+    </div>
+
+    <div class="plan-section">
+      <div class="plan-section-title">PHASE 2 - ADMIN CORE</div>
+      <div class="plan-item active" style="--active-color:#64b5f6;"><div class="plan-dot"></div>계정 / 결제 / 매출x2<span class="plan-worker-tag" style="background:rgba(100,181,246,0.1);color:#64b5f6;">W1</span></div>
+      <div class="plan-item active" style="--active-color:#81c784;"><div class="plan-dot"></div>강의부여 / 쿠폰 / AI<span class="plan-worker-tag" style="background:rgba(129,199,132,0.1);color:#81c784;">W2</span></div>
+    </div>
+
+    <div class="plan-section">
+      <div class="plan-section-title">PHASE 3 - ADMIN TEACHER</div>
+      <div class="plan-item active" style="--active-color:#ffb74d;"><div class="plan-dot"></div>수강 / 학생 / 강의 / 배송 / 책<span class="plan-worker-tag" style="background:rgba(255,183,77,0.1);color:#ffb74d;">W3</span></div>
+    </div>
+
+    <div class="plan-section">
+      <div class="plan-section-title">PHASE 4 - TEACHER</div>
+      <div class="plan-item active" style="--active-color:#ce93d8;"><div class="plan-dot"></div>공지 / 질문칸반 / 채팅<span class="plan-worker-tag" style="background:rgba(206,147,216,0.1);color:#ce93d8;">W4</span></div>
+    </div>
+
+    <div class="plan-section">
+      <div class="plan-section-title">PHASE 5 - VERIFY</div>
+      <div class="plan-item pending"><div class="plan-dot"></div>빌드 &amp; 라우팅 검증<span class="plan-worker-tag" style="background:rgba(127,219,202,0.1);color:#7fdbca;">TL</span></div>
+      <div class="plan-item pending"><div class="plan-dot"></div>반응형 &amp; UI 점검<span class="plan-worker-tag" style="background:rgba(127,219,202,0.1);color:#7fdbca;">TL</span></div>
+    </div>
+
+    <div class="progress-summary">
+      <div class="progress-label"><span>OVERALL</span><span>7 / 23</span></div>
+      <div class="progress-track">
+        <div class="progress-fill teal" style="width:13%;"></div>
+        <div class="progress-fill blue" style="width:6%;"></div>
+        <div class="progress-fill green" style="width:6%;"></div>
+        <div class="progress-fill orange" style="width:3%;"></div>
+        <div class="progress-fill purple" style="width:2%;"></div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-num">5</div><div class="stat-label">TEAM</div></div>
+        <div class="stat-box"><div class="stat-num">16</div><div class="stat-label">PAGES</div></div>
+        <div class="stat-box"><div class="stat-num">7</div><div class="stat-label">DONE</div></div>
+      </div>
+    </div>
+
+    <div class="team-roster">
+      <div class="team-roster-title">TEAM ROSTER</div>
+      <div class="roster-item"><div class="roster-dot" style="background:#7fdbca;"></div><div class="roster-name">Team Lead</div><div class="roster-role">기획/설계/디자인</div></div>
+      <div class="roster-item"><div class="roster-dot" style="background:#64b5f6;"></div><div class="roster-name">Worker-1</div><div class="roster-role">데이터 시각화</div></div>
+      <div class="roster-item"><div class="roster-dot" style="background:#81c784;"></div><div class="roster-name">Worker-2</div><div class="roster-role">기능 개발</div></div>
+      <div class="roster-item"><div class="roster-dot" style="background:#ffb74d;"></div><div class="roster-name">Worker-3</div><div class="roster-role">풀스택 빌더</div></div>
+      <div class="roster-item"><div class="roster-dot" style="background:#ce93d8;"></div><div class="roster-name">Worker-4</div><div class="roster-role">UI/UX 개발</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2, '0');
+  const m = String(now.getMinutes()).padStart(2, '0');
+  const s = String(now.getSeconds()).padStart(2, '0');
+  document.getElementById('clock').textContent = h + ':' + m + ':' + s + ' // ALL SYSTEMS WORKING';
+}
+setInterval(updateClock, 1000);
+updateClock();
+</script>
+</body>
+</html>
