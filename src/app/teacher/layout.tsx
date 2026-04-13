@@ -6,9 +6,12 @@ export default function TeacherLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col h-full bg-gray-50 text-gray-900">
+    <div
+      className="min-h-screen bg-[#F5F2EA] text-[#1A1A18]"
+      style={{ fontFamily: "'Pretendard Variable', Pretendard, sans-serif" }}
+    >
       <TopNav />
-      <main className="flex-1 overflow-y-auto p-6">{children}</main>
+      <main className="max-w-6xl mx-auto px-4 py-8">{children}</main>
     </div>
   );
 }

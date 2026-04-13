@@ -80,12 +80,12 @@ export default function TeacherGradingPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <h1 className="text-xl font-bold text-gray-900 mb-1">채점 관리</h1>
-      <p className="text-sm text-gray-500 mb-6">AI 채점 결과를 검토하고 학생에게 피드백을 발송하세요</p>
+    <div className="max-w-3xl">
+      <h1 className="text-xl font-bold text-[#1A1A18] mb-1">채점 관리</h1>
+      <p className="text-sm text-[#6B6B68] mb-6">AI 채점 결과를 검토하고 학생에게 피드백을 발송하세요</p>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 bg-gray-100 p-1 rounded-lg w-fit">
+      <div className="flex border-b border-black/10 mb-6">
         {(["pending", "sent"] as const).map((tab) => {
           const count = tab === "pending" ? pendingItems.length : sentItems.length;
           const label = tab === "pending" ? "채점 대기" : "발송 완료";
@@ -93,13 +93,15 @@ export default function TeacherGradingPage() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === tab ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+              className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                activeTab === tab
+                  ? "border-[#C9E535] text-[#1A1A18]"
+                  : "border-transparent text-[#6B6B68] hover:text-[#1A1A18]"
               }`}
             >
               {label}
               <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold ${
-                activeTab === tab ? "bg-blue-100 text-blue-700" : "bg-gray-200 text-gray-500"
+                activeTab === tab ? "bg-[#C9E535]/30 text-[#1A1A18]" : "bg-[#EBE7DA] text-[#6B6B68]"
               }`}>
                 {count}
               </span>
@@ -111,15 +113,15 @@ export default function TeacherGradingPage() {
       {/* Cards */}
       <div className="space-y-3">
         {displayItems.length === 0 && (
-          <div className="text-center py-12 text-sm text-gray-400">항목이 없습니다.</div>
+          <div className="text-center py-12 text-sm text-[#6B6B68]">항목이 없습니다.</div>
         )}
         {displayItems.map((item) => {
           const isExpanded = expandedId === item.id;
           return (
-            <div key={item.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+            <div key={item.id} className="bg-white border border-black/10 rounded-xl overflow-hidden">
               {/* Collapsed header */}
               <button
-                className="w-full flex items-center gap-4 p-4 text-left hover:bg-gray-50 transition-colors"
+                className="w-full flex items-center gap-4 p-4 text-left hover:bg-[#F5F2EA]/50 transition-colors"
                 onClick={() => setExpandedId(isExpanded ? null : item.id)}
               >
                 <div className="flex-shrink-0">
@@ -131,25 +133,25 @@ export default function TeacherGradingPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-sm font-semibold text-gray-900">{item.studentName}</span>
-                    <span className="text-xs text-gray-400">{item.chapterTitle}</span>
+                    <span className="text-sm font-semibold text-[#1A1A18]">{item.studentName}</span>
+                    <span className="text-xs text-[#6B6B68]">{item.chapterTitle}</span>
                   </div>
-                  <p className="text-xs text-gray-500 truncate">{item.problemText}</p>
+                  <p className="text-xs text-[#6B6B68] truncate">{item.problemText}</p>
                 </div>
-                <div className="flex-shrink-0 text-gray-400">
+                <div className="flex-shrink-0 text-[#6B6B68]">
                   {isExpanded ? <CaretUp size={16} weight="light" /> : <CaretDown size={16} weight="light" />}
                 </div>
               </button>
 
               {/* Expanded content */}
               {isExpanded && (
-                <div className="border-t border-gray-100 p-4 space-y-4">
+                <div className="border-t border-black/5 p-4 space-y-4">
                   <div>
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">문제</p>
-                    <p className="text-sm text-gray-800">{item.problemText}</p>
+                    <p className="text-xs font-semibold text-[#6B6B68] uppercase tracking-wide mb-1">문제</p>
+                    <p className="text-sm text-[#1A1A18]">{item.problemText}</p>
                   </div>
 
-                  <div className={`rounded-lg p-3 ${item.aiGrading.isCorrect ? "bg-green-50 border border-green-100" : "bg-red-50 border border-red-100"}`}>
+                  <div className="bg-[#EBE7DA] rounded-lg p-3">
                     <div className="flex items-center gap-1.5 mb-1">
                       {item.aiGrading.isCorrect ? (
                         <CheckCircle size={14} weight="fill" className="text-green-500" />
@@ -160,14 +162,14 @@ export default function TeacherGradingPage() {
                         AI 분석 — {item.aiGrading.isCorrect ? "정답" : "오답"}
                       </p>
                     </div>
-                    <p className="text-xs text-gray-600 leading-relaxed">{item.aiGrading.feedback}</p>
+                    <p className="text-xs text-[#6B6B68] leading-relaxed">{item.aiGrading.feedback}</p>
                   </div>
 
                   {item.status === "pending" && (
                     <div>
-                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">선생님 피드백</p>
+                      <p className="text-xs font-semibold text-[#6B6B68] uppercase tracking-wide mb-1">선생님 피드백</p>
                       <textarea
-                        className="w-full text-sm border border-gray-200 rounded-lg p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-200 text-gray-800 placeholder-gray-300"
+                        className="w-full text-sm border border-black/10 rounded-lg p-3 resize-none focus:outline-none focus:ring-2 focus:ring-[#C9E535]/50 text-[#1A1A18] placeholder-[#6B6B68]/50 bg-white"
                         rows={3}
                         placeholder="학생에게 추가로 전달할 내용을 입력하세요..."
                         value={item.teacherFeedback}
@@ -176,7 +178,7 @@ export default function TeacherGradingPage() {
                       <div className="flex justify-end mt-2">
                         <button
                           onClick={() => sendFeedback(item.id)}
-                          className="flex items-center gap-1.5 bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                          className="flex items-center gap-1.5 bg-[#C9E535] hover:bg-[#B3CC20] text-[#1A1A18] text-sm font-medium px-4 py-2 rounded-lg transition-colors"
                         >
                           <PaperPlaneTilt size={15} weight="light" />
                           발송
@@ -187,8 +189,8 @@ export default function TeacherGradingPage() {
 
                   {item.status === "sent" && item.teacherFeedback && (
                     <div>
-                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">발송된 피드백</p>
-                      <p className="text-sm text-gray-700 bg-gray-50 rounded-lg p-3">{item.teacherFeedback}</p>
+                      <p className="text-xs font-semibold text-[#6B6B68] uppercase tracking-wide mb-1">발송된 피드백</p>
+                      <p className="text-sm text-[#1A1A18] bg-[#F5F2EA] rounded-lg p-3">{item.teacherFeedback}</p>
                     </div>
                   )}
                 </div>

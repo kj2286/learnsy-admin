@@ -4,11 +4,11 @@ import { useData } from "@/context/DataContext";
 import { Star } from "@phosphor-icons/react";
 
 const MESSAGE_TYPE_STYLES: Record<string, { label: string; className: string }> = {
-  nudge: { label: "독려", className: "bg-blue-50 text-blue-600" },
-  praise: { label: "칭찬", className: "bg-green-50 text-green-600" },
-  warning: { label: "경고", className: "bg-orange-50 text-orange-600" },
-  assignment: { label: "과제", className: "bg-purple-50 text-purple-600" },
-  general: { label: "일반", className: "bg-gray-100 text-gray-600" },
+  nudge: { label: "독려", className: "bg-[#C9E535]/20 text-[#1A1A18]" },
+  praise: { label: "칭찬", className: "bg-green-100 text-green-700" },
+  warning: { label: "경고", className: "bg-orange-100 text-orange-700" },
+  assignment: { label: "과제", className: "bg-[#EBE7DA] text-[#6B6B68]" },
+  general: { label: "일반", className: "bg-[#EBE7DA] text-[#6B6B68]" },
 };
 
 function StarRating({ rating }: { rating: number }) {
@@ -19,10 +19,10 @@ function StarRating({ rating }: { rating: number }) {
           key={i}
           size={12}
           weight={i <= Math.round(rating) ? "fill" : "light"}
-          className={i <= Math.round(rating) ? "text-yellow-400" : "text-gray-300"}
+          className={i <= Math.round(rating) ? "text-[#C9E535]" : "text-[#1A1A18]/20"}
         />
       ))}
-      <span className="text-xs text-gray-500 ml-1">{rating.toFixed(1)}</span>
+      <span className="text-xs text-[#6B6B68] ml-1">{rating.toFixed(1)}</span>
     </div>
   );
 }
@@ -42,7 +42,6 @@ export default function StudentDashboardPage() {
     subscribedTeacherIds.includes(l.teacherId)
   );
 
-  // st1 progress from mock: { c1: 100, c2: 100, c3: 45, c4: 0 }
   const lectureProgress: Record<string, number> = {
     l1: 45,
     l2: 100,
@@ -58,40 +57,40 @@ export default function StudentDashboardPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-xl font-bold text-gray-900 mb-1">
+    <div>
+      <h1 className="text-2xl font-bold text-[#1A1A18] mb-1">
         안녕하세요, 이하은님
       </h1>
-      <p className="text-sm text-gray-500 mb-6">오늘의 학습 현황을 확인하세요</p>
+      <p className="text-sm text-[#6B6B68] mb-8">오늘의 학습 현황을 확인하세요</p>
 
       {/* 구독 중인 선생님 */}
       <section className="mb-8">
-        <h2 className="text-sm font-bold text-gray-900 mb-3">
+        <h2 className="text-sm font-bold text-[#1A1A18] mb-3">
           구독 중인 선생님
         </h2>
         {subscribedTeachers.length === 0 ? (
-          <p className="text-sm text-gray-400">구독 중인 선생님이 없습니다.</p>
+          <p className="text-sm text-[#6B6B68]">구독 중인 선생님이 없습니다.</p>
         ) : (
           <div className="grid grid-cols-2 gap-4">
             {subscribedTeachers.map((teacher) => (
               <div
                 key={teacher.id}
-                className="bg-white border border-gray-200 rounded-xl p-5"
+                className="bg-white rounded-xl border border-black/10 p-6"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <p className="text-sm font-bold text-gray-900">
+                    <p className="text-sm font-bold text-[#1A1A18]">
                       {teacher.name}
                     </p>
-                    <p className="text-xs text-gray-500">{teacher.subject}</p>
+                    <p className="text-xs text-[#6B6B68]">{teacher.subject}</p>
                   </div>
-                  <span className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-medium">
+                  <span className="text-[10px] bg-[#C9E535]/20 text-[#1A1A18] px-2 py-0.5 rounded font-medium">
                     구독중
                   </span>
                 </div>
-                <p className="text-xs text-gray-400 mb-2">{teacher.university}</p>
+                <p className="text-xs text-[#6B6B68] mb-2">{teacher.university}</p>
                 <StarRating rating={teacher.rating} />
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs text-[#6B6B68] mt-2">
                   수강생 {teacher.subscribers}명
                 </p>
               </div>
@@ -102,24 +101,24 @@ export default function StudentDashboardPage() {
 
       {/* 학습 현황 */}
       <section className="mb-8">
-        <h2 className="text-sm font-bold text-gray-900 mb-3">학습 현황</h2>
-        <div className="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
+        <h2 className="text-sm font-bold text-[#1A1A18] mb-3">학습 현황</h2>
+        <div className="bg-white rounded-xl border border-black/10 p-6 space-y-4">
           {subscribedLectures.length === 0 ? (
-            <p className="text-sm text-gray-400">수강 중인 강의가 없습니다.</p>
+            <p className="text-sm text-[#6B6B68]">수강 중인 강의가 없습니다.</p>
           ) : (
             subscribedLectures.map((lecture) => {
               const progress = lectureProgress[lecture.id] ?? 0;
               return (
                 <div key={lecture.id}>
                   <div className="flex items-center justify-between mb-1.5">
-                    <p className="text-sm text-gray-900 font-medium">
+                    <p className="text-sm text-[#1A1A18] font-medium">
                       {lecture.title}
                     </p>
-                    <span className="text-xs text-gray-500">{progress}%</span>
+                    <span className="text-xs text-[#6B6B68]">{progress}%</span>
                   </div>
-                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-2 bg-[#EBE7DA] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-blue-500 rounded-full transition-all"
+                      className="h-full bg-[#C9E535] rounded-full transition-all"
                       style={{ width: `${progress}%` }}
                     />
                   </div>
@@ -132,10 +131,10 @@ export default function StudentDashboardPage() {
 
       {/* 최근 메시지 */}
       <section>
-        <h2 className="text-sm font-bold text-gray-900 mb-3">최근 메시지</h2>
-        <div className="bg-white border border-gray-200 rounded-xl p-5 space-y-3">
+        <h2 className="text-sm font-bold text-[#1A1A18] mb-3">최근 메시지</h2>
+        <div className="bg-white rounded-xl border border-black/10 p-6 space-y-3">
           {myMessages.length === 0 ? (
-            <p className="text-sm text-gray-400">받은 메시지가 없습니다.</p>
+            <p className="text-sm text-[#6B6B68]">받은 메시지가 없습니다.</p>
           ) : (
             myMessages.map((msg) => {
               const style =
@@ -143,7 +142,7 @@ export default function StudentDashboardPage() {
               return (
                 <div
                   key={msg.id}
-                  className="flex items-start gap-3 py-2 border-b border-gray-100 last:border-0"
+                  className="flex items-start gap-3 py-2 border-b border-black/5 last:border-0"
                 >
                   <span
                     className={`text-[10px] px-2 py-0.5 rounded font-medium flex-shrink-0 mt-0.5 ${style.className}`}
@@ -151,12 +150,12 @@ export default function StudentDashboardPage() {
                     {style.label}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                    <p className="text-sm font-medium text-[#1A1A18] truncate">
                       {msg.title}
                     </p>
-                    <p className="text-xs text-gray-500 truncate">{msg.content}</p>
+                    <p className="text-xs text-[#6B6B68] truncate">{msg.content}</p>
                   </div>
-                  <span className="text-xs text-gray-400 flex-shrink-0">
+                  <span className="text-xs text-[#6B6B68] flex-shrink-0">
                     {formatDate(msg.createdAt)}
                   </span>
                 </div>

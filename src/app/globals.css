@@ -2,6 +2,7 @@
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
+  /* Admin (dark) */
   --color-admin-bg: #0f1117;
   --color-admin-sidebar: #161923;
   --color-admin-card: #1c1f2e;
@@ -13,23 +14,38 @@
   --color-success: #22c55e;
   --color-danger: #ef4444;
   --color-warning: #f59e0b;
+  /* 수학비서 (cream/lime) */
+  --color-cream: #F5F2EA;
+  --color-cream-dark: #EBE7DA;
+  --color-lime: #C9E535;
+  --color-lime-dark: #B3CC20;
+  --color-dark: #1A1A18;
+  --color-dark2: #2C2C2A;
+  --color-muted: #6B6B68;
 }
 
-/* 스크롤바 스타일 */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
+/* Pretendard for 수학비서 pages */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
+/* 스크롤바 */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #3a3d4e; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4a4d5e; }
 
-::-webkit-scrollbar-thumb {
-  background: #3a3d4e;
-  border-radius: 3px;
+/* 수학비서 유틸리티 */
+.btn-lime {
+  background: #C9E535;
+  color: #1A1A18;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.15s;
 }
-
-::-webkit-scrollbar-thumb:hover {
-  background: #4a4d5e;
+.btn-lime:hover { background: #B3CC20; }
+.card-cream {
+  background: white;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 1.5rem;
 }

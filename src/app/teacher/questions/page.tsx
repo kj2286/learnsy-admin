@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { User, Clock } from "@phosphor-icons/react";
+import { User, Clock, PaperPlaneTilt } from "@phosphor-icons/react";
 import { mockQuestions } from "@/data/mock-questions";
 import Dropdown from "@/components/shared/Dropdown";
 import type { Question } from "@/types";
@@ -28,10 +28,11 @@ export default function QuestionsPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <h1 className="text-xl font-bold text-gray-900 mb-4">질문 관리</h1>
+    <div>
+      <h1 className="text-xl font-bold text-[#1A1A18] mb-1">질문 관리</h1>
+      <p className="text-sm text-[#6B6B68] mb-6">AI 초안을 검토하고 학생에게 답변을 발송하세요</p>
 
-      <div className="flex gap-3 mb-6 p-4 bg-white border border-gray-200 rounded-lg">
+      <div className="flex gap-3 mb-6 p-4 bg-white border border-black/10 rounded-xl">
         <Dropdown
           label="강의 선택"
           dark={false}
@@ -52,15 +53,15 @@ export default function QuestionsPage() {
         {/* 답변 대기 */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-            <h2 className="text-sm font-bold text-gray-700">답변 대기 ({waiting.length})</h2>
+            <div className="w-2.5 h-2.5 rounded-full bg-[#C9E535]"></div>
+            <h2 className="text-sm font-bold text-[#1A1A18]">답변 대기 ({waiting.length})</h2>
           </div>
           <div className="space-y-3">
             {waiting.map((q) => (
               <QuestionCard key={q.id} question={q} onToggle={toggleStatus} />
             ))}
             {waiting.length === 0 && (
-              <p className="text-center text-gray-400 text-sm py-8">대기 중인 질문이 없습니다</p>
+              <p className="text-center text-[#6B6B68] text-sm py-8">대기 중인 질문이 없습니다</p>
             )}
           </div>
         </div>
@@ -68,8 +69,8 @@ export default function QuestionsPage() {
         {/* 답변 완료 */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-3 h-3 rounded-full bg-green-400"></div>
-            <h2 className="text-sm font-bold text-gray-700">답변 완료 ({completed.length})</h2>
+            <div className="w-2.5 h-2.5 rounded-full bg-[#6B6B68]/40"></div>
+            <h2 className="text-sm font-bold text-[#1A1A18]">답변 완료 ({completed.length})</h2>
           </div>
           <div className="space-y-3">
             {completed.map((q) => (
@@ -83,30 +84,73 @@ export default function QuestionsPage() {
 }
 
 function QuestionCard({ question, onToggle }: { question: Question; onToggle: (id: string) => void }) {
+  const [draft, setDraft] = useState(question.answer ?? "");
+
   return (
-    <div
-      className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-      onClick={() => onToggle(question.id)}
-    >
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-xs font-mono text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+    <div className="bg-white border border-black/10 rounded-xl p-4">
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-xs font-mono text-[#6B6B68] bg-[#EBE7DA] px-2 py-0.5 rounded">
           [{question.courseCode}] {question.courseName}
         </span>
+        <span className={`text-[10px] px-2 py-0.5 rounded font-medium ${
+          question.status === "대기"
+            ? "bg-[#EBE7DA] text-[#6B6B68]"
+            : "bg-[#C9E535]/20 text-[#1A1A18]"
+        }`}>
+          {question.status === "대기" ? "검토대기" : "발송완료"}
+        </span>
       </div>
+
       <div className="mb-2">
-        <span className="text-xs text-purple-600 bg-purple-50 px-2 py-0.5 rounded">{question.category}</span>
+        <span className="text-xs text-[#6B6B68] bg-[#EBE7DA] px-2 py-0.5 rounded">{question.category}</span>
       </div>
-      <div className="flex items-center gap-1 mb-2 text-xs text-gray-500">
+
+      <div className="flex items-center gap-1 mb-2 text-xs text-[#6B6B68]">
         <User size={12} weight="light" />
         <span>{question.studentName}</span>
       </div>
-      <p className="text-sm text-gray-700 line-clamp-2 mb-2">{question.content}</p>
-      {question.answer && (
-        <div className="mt-2 p-2 bg-green-50 border border-green-100 rounded text-xs text-green-700">
-          <span className="font-semibold">답변:</span> {question.answer}
+
+      {/* Student question bubble */}
+      <div className="bg-[#C9E535]/30 rounded-xl rounded-tl-none px-3 py-2 mb-3">
+        <p className="text-sm text-[#1A1A18]">{question.content}</p>
+      </div>
+
+      {/* AI draft */}
+      {question.status === "대기" && (
+        <div className="bg-[#EBE7DA] rounded-xl p-3 mb-3">
+          <p className="text-[10px] font-semibold text-[#6B6B68] mb-1">AI 초안</p>
+          <p className="text-xs text-[#1A1A18] leading-relaxed">AI가 작성한 답변 초안입니다. 검토 후 수정하여 발송하세요.</p>
         </div>
       )}
-      <div className="flex items-center gap-1 mt-2 text-xs text-gray-400">
+
+      {question.status === "대기" ? (
+        <div>
+          <textarea
+            className="w-full text-sm border border-black/10 rounded-lg p-3 resize-none focus:outline-none focus:ring-2 focus:ring-[#C9E535]/50 bg-white text-[#1A1A18] placeholder-[#6B6B68]/50"
+            rows={3}
+            placeholder="답변을 입력하세요..."
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+          />
+          <div className="flex justify-end mt-2">
+            <button
+              onClick={() => onToggle(question.id)}
+              className="flex items-center gap-1.5 bg-[#C9E535] hover:bg-[#B3CC20] text-[#1A1A18] text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+            >
+              <PaperPlaneTilt size={14} weight="light" />
+              발송
+            </button>
+          </div>
+        </div>
+      ) : (
+        question.answer && (
+          <div className="mt-2 p-2 bg-[#C9E535]/10 border border-[#C9E535]/30 rounded text-xs text-[#1A1A18]">
+            <span className="font-semibold">답변:</span> {question.answer}
+          </div>
+        )
+      )}
+
+      <div className="flex items-center gap-1 mt-2 text-xs text-[#6B6B68]">
         <Clock size={12} weight="light" />
         <span>{question.createdAt}</span>
       </div>

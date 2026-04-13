@@ -1,12 +1,12 @@
 "use client";
 
-import { Question, CheckSquare, Users } from "@phosphor-icons/react";
+import { Question, CheckSquare, Users, ArrowRight } from "@phosphor-icons/react";
 import Link from "next/link";
 
 const stats = [
-  { label: "수강생", value: "47명", icon: Users, color: "text-blue-600 bg-blue-50" },
-  { label: "대기 질문", value: "5건", icon: Question, color: "text-orange-600 bg-orange-50" },
-  { label: "채점 대기", value: "3건", icon: CheckSquare, color: "text-purple-600 bg-purple-50" },
+  { label: "수강생", value: "47명", icon: Users },
+  { label: "대기 질문", value: "5건", icon: Question },
+  { label: "채점 대기", value: "3건", icon: CheckSquare },
 ];
 
 const recentActivity = [
@@ -19,47 +19,63 @@ const recentActivity = [
 
 export default function TeacherDashboardPage() {
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-xl font-bold text-gray-900 mb-1">안녕하세요, 김수학 선생님</h1>
-      <p className="text-sm text-gray-500 mb-6">오늘의 현황을 확인하세요</p>
+    <div>
+      <h1 className="text-xl font-bold text-[#1A1A18] mb-1">안녕하세요, 김수학 선생님</h1>
+      <p className="text-sm text-[#6B6B68] mb-6">오늘의 현황을 확인하세요</p>
 
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-3 gap-4 mb-6">
         {stats.map((s) => {
           const Icon = s.icon;
           return (
-            <div key={s.label} className="bg-white border border-gray-200 rounded-xl p-5">
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${s.color}`}>
-                <Icon size={20} weight="light" />
+            <div key={s.label} className="bg-white rounded-xl border border-black/10 p-6">
+              <div className="w-10 h-10 rounded-lg bg-[#C9E535]/20 flex items-center justify-center mb-3">
+                <Icon size={20} weight="light" className="text-[#1A1A18]" />
               </div>
-              <p className="text-2xl font-bold text-gray-900">{s.value}</p>
-              <p className="text-xs text-gray-500 mt-1">{s.label}</p>
+              <p className="text-2xl font-bold text-[#1A1A18]">{s.value}</p>
+              <p className="text-xs text-[#6B6B68] mt-1">{s.label}</p>
             </div>
           );
         })}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-          <p className="text-sm font-medium text-yellow-800">대기 중인 질문 5건</p>
-          <p className="text-xs text-yellow-600 mt-1">AI 초안이 준비되었습니다</p>
-          <Link href="/teacher/questions" className="text-xs text-yellow-700 font-medium mt-2 inline-block hover:underline">확인하기 →</Link>
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="bg-[#C9E535]/10 border border-[#C9E535]/30 rounded-xl p-4">
+          <p className="text-sm font-medium text-[#1A1A18]">대기 중인 질문 5건</p>
+          <p className="text-xs text-[#6B6B68] mt-1">AI 초안이 준비되었습니다</p>
+          <Link
+            href="/teacher/questions"
+            className="flex items-center gap-1 text-xs text-[#1A1A18] font-medium mt-3 hover:underline"
+          >
+            확인하기 <ArrowRight size={12} weight="light" />
+          </Link>
         </div>
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-          <p className="text-sm font-medium text-green-800">채점 대기 과제 3건</p>
-          <p className="text-xs text-green-600 mt-1">AI 채점이 완료되었습니다</p>
-          <Link href="/teacher/grading" className="text-xs text-green-700 font-medium mt-2 inline-block hover:underline">확인하기 →</Link>
+        <div className="bg-[#C9E535]/10 border border-[#C9E535]/30 rounded-xl p-4">
+          <p className="text-sm font-medium text-[#1A1A18]">채점 대기 과제 3건</p>
+          <p className="text-xs text-[#6B6B68] mt-1">AI 채점이 완료되었습니다</p>
+          <Link
+            href="/teacher/grading"
+            className="flex items-center gap-1 text-xs text-[#1A1A18] font-medium mt-3 hover:underline"
+          >
+            확인하기 <ArrowRight size={12} weight="light" />
+          </Link>
         </div>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-xl p-5">
-        <h2 className="text-sm font-bold text-gray-900 mb-4">최근 학생 활동</h2>
+      <div className="bg-white rounded-xl border border-black/10 p-6">
+        <h2 className="text-sm font-bold text-[#1A1A18] mb-4">최근 학생 활동</h2>
         <div className="space-y-3">
           {recentActivity.map((a, i) => (
             <div key={i} className="flex items-center gap-3">
-              <span className={`text-[10px] px-2 py-0.5 rounded font-medium ${a.type === "질문" ? "bg-orange-50 text-orange-600" : "bg-purple-50 text-purple-600"}`}>{a.type}</span>
-              <span className="text-sm text-gray-900 font-medium w-16">{a.student}</span>
-              <span className="text-sm text-gray-600 truncate flex-1">{a.content}</span>
-              <span className="text-xs text-gray-400 flex-shrink-0">{a.time}</span>
+              <span className={`text-[10px] px-2 py-0.5 rounded font-medium flex-shrink-0 ${
+                a.type === "질문"
+                  ? "bg-[#C9E535]/20 text-[#1A1A18]"
+                  : "bg-[#EBE7DA] text-[#6B6B68]"
+              }`}>
+                {a.type}
+              </span>
+              <span className="text-sm text-[#1A1A18] font-medium w-16 flex-shrink-0">{a.student}</span>
+              <span className="text-sm text-[#6B6B68] truncate flex-1">{a.content}</span>
+              <span className="text-xs text-[#6B6B68] flex-shrink-0">{a.time}</span>
             </div>
           ))}
         </div>
