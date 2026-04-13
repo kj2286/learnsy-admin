@@ -137,7 +137,7 @@ export default function Sidebar() {
       <div className="mb-3 px-4 pt-2 border-t border-admin-border">
         {renderSectionLabel("사이트 바로가기")}
         <a
-          href="https://coding-sage-alpha.vercel.app"
+          href="https://math-biseo.netlify.app"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-3 px-4 py-2 text-sm text-admin-text-muted hover:text-admin-text hover:bg-white/5 transition-colors -mx-4"
@@ -146,11 +146,13 @@ export default function Sidebar() {
           {!collapsed && <span>학생용 사이트 ↗</span>}
         </a>
         <a
-          href="/teacher"
+          href="https://math-biseo.netlify.app/login"
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center gap-3 px-4 py-2 text-sm text-admin-text-muted hover:text-admin-text hover:bg-white/5 transition-colors -mx-4"
         >
           <ArrowSquareOut size={18} weight="light" />
-          {!collapsed && <span>강사용 페이지 →</span>}
+          {!collapsed && <span>강사용 사이트 ↗</span>}
         </a>
       </div>
 
