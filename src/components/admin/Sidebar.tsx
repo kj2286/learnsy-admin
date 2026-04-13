@@ -18,6 +18,11 @@ import {
   Book,
   CaretLeft,
   CaretRight,
+  VideoCamera,
+  CreditCard as SubIcon,
+  Buildings,
+  ChartBar,
+  UserCircleGear,
 } from "@phosphor-icons/react";
 import { mockTeachers } from "@/data/mock-teachers";
 
@@ -43,11 +48,42 @@ const bookMenuItems = [
   { label: "책 등록", href: "/admin/books", icon: Book },
 ];
 
+const platformMenuItems = [
+  { label: "콘텐츠 관리", href: "/admin/content", icon: VideoCamera },
+  { label: "구독 관리", href: "/admin/subscriptions", icon: SubIcon },
+  { label: "학교 관리", href: "/admin/schools", icon: Buildings },
+  { label: "리포트", href: "/admin/reports", icon: ChartBar },
+  { label: "학습매니저", href: "/admin/manager", icon: UserCircleGear },
+];
+
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const renderMenuLink = (href: string, label: string, Icon: React.ComponentType<any>) => (
+    <Link
+      key={href}
+      href={href}
+      className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors ${
+        isActive(href)
+          ? "bg-admin-accent/10 text-admin-accent border-r-2 border-admin-accent"
+          : "text-admin-text-muted hover:text-admin-text hover:bg-white/5"
+      }`}
+    >
+      <Icon size={18} weight="light" />
+      {!collapsed && <span>{label}</span>}
+    </Link>
+  );
+
+  const renderSectionLabel = (label: string) =>
+    !collapsed ? (
+      <p className="px-4 mb-1 text-[11px] font-semibold text-admin-text-muted uppercase tracking-wider">
+        {label}
+      </p>
+    ) : null;
 
   return (
     <aside
@@ -68,83 +104,31 @@ export default function Sidebar() {
       <nav className="flex-1 overflow-y-auto py-3">
         {/* 공통 메뉴 */}
         <div className="mb-4">
-          {!collapsed && (
-            <p className="px-4 mb-1 text-[11px] font-semibold text-admin-text-muted uppercase tracking-wider">
-              공통
-            </p>
-          )}
-          {commonMenuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors ${
-                  isActive(item.href)
-                    ? "bg-admin-accent/10 text-admin-accent border-r-2 border-admin-accent"
-                    : "text-admin-text-muted hover:text-admin-text hover:bg-white/5"
-                }`}
-              >
-                <Icon size={18} weight="light" />
-                {!collapsed && <span>{item.label}</span>}
-              </Link>
-            );
-          })}
+          {renderSectionLabel("공통")}
+          {commonMenuItems.map((item) => renderMenuLink(item.href, item.label, item.icon))}
         </div>
 
         {/* 강사별 메뉴 */}
         {mockTeachers.map((teacher) => (
           <div key={teacher.id} className="mb-3">
-            {!collapsed && (
-              <p className="px-4 mb-1 text-[11px] font-semibold text-admin-text-muted uppercase tracking-wider">
-                {teacher.name}
-              </p>
-            )}
+            {renderSectionLabel(teacher.name)}
             {teacherSubMenus.map((sub) => {
               const href = `/admin/teachers/${teacher.id}/${sub.suffix}`;
-              const Icon = sub.icon;
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors ${
-                    isActive(href)
-                      ? "bg-admin-accent/10 text-admin-accent border-r-2 border-admin-accent"
-                      : "text-admin-text-muted hover:text-admin-text hover:bg-white/5"
-                  }`}
-                >
-                  <Icon size={18} weight="light" />
-                  {!collapsed && <span>{sub.label}</span>}
-                </Link>
-              );
+              return renderMenuLink(href, sub.label, sub.icon);
             })}
           </div>
         ))}
 
         {/* 도서 판매 */}
         <div className="mb-3">
-          {!collapsed && (
-            <p className="px-4 mb-1 text-[11px] font-semibold text-admin-text-muted uppercase tracking-wider">
-              도서 판매
-            </p>
-          )}
-          {bookMenuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors ${
-                  isActive(item.href)
-                    ? "bg-admin-accent/10 text-admin-accent border-r-2 border-admin-accent"
-                    : "text-admin-text-muted hover:text-admin-text hover:bg-white/5"
-                }`}
-              >
-                <Icon size={18} weight="light" />
-                {!collapsed && <span>{item.label}</span>}
-              </Link>
-            );
-          })}
+          {renderSectionLabel("도서 판매")}
+          {bookMenuItems.map((item) => renderMenuLink(item.href, item.label, item.icon))}
+        </div>
+
+        {/* 내신인강 플랫폼 */}
+        <div className="mb-3">
+          {renderSectionLabel("내신인강 플랫폼")}
+          {platformMenuItems.map((item) => renderMenuLink(item.href, item.label, item.icon))}
         </div>
       </nav>
 
