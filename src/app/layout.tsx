@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { DataProvider } from "@/context/DataContext";
 import "./globals.css";
 
 const geist = Geist({
@@ -19,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${geist.variable} h-full antialiased`}>
-      <body className="h-full font-sans">{children}</body>
+      <body className="h-full font-sans">
+        <DataProvider>{children}</DataProvider>
+      </body>
     </html>
   );
 }

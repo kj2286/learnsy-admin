@@ -23,6 +23,7 @@ import {
   Buildings,
   ChartBar,
   UserCircleGear,
+  ArrowSquareOut,
 } from "@phosphor-icons/react";
 import { mockTeachers } from "@/data/mock-teachers";
 
@@ -131,6 +132,27 @@ export default function Sidebar() {
           {platformMenuItems.map((item) => renderMenuLink(item.href, item.label, item.icon))}
         </div>
       </nav>
+
+      {/* 외부 사이트 연결 */}
+      <div className="mb-3 px-4 pt-2 border-t border-admin-border">
+        {renderSectionLabel("사이트 바로가기")}
+        <a
+          href="https://coding-sage-alpha.vercel.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 px-4 py-2 text-sm text-admin-text-muted hover:text-admin-text hover:bg-white/5 transition-colors -mx-4"
+        >
+          <ArrowSquareOut size={18} weight="light" />
+          {!collapsed && <span>학생용 사이트 ↗</span>}
+        </a>
+        <a
+          href="/teacher"
+          className="flex items-center gap-3 px-4 py-2 text-sm text-admin-text-muted hover:text-admin-text hover:bg-white/5 transition-colors -mx-4"
+        >
+          <ArrowSquareOut size={18} weight="light" />
+          {!collapsed && <span>강사용 페이지 →</span>}
+        </a>
+      </div>
 
       {/* 접기/펼치기 */}
       <button
