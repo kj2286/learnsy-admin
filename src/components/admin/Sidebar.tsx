@@ -12,8 +12,7 @@ import {
   Ticket,
   Robot,
   Megaphone,
-  Users,
-  BookOpen,
+  ChalkboardTeacher,
   Package,
   Book,
   CaretLeft,
@@ -25,23 +24,17 @@ import {
   UserCircleGear,
   ArrowSquareOut,
 } from "@phosphor-icons/react";
-import { mockTeachers } from "@/data/mock-teachers";
 
 const commonMenuItems = [
   { label: "내 계정", href: "/admin/account", icon: User },
   { label: "결제 내역", href: "/admin/payments", icon: CreditCard },
   { label: "매출 (기간별)", href: "/admin/sales-period", icon: ChartLine },
   { label: "매출 (상품별)", href: "/admin/sales-product", icon: ShoppingBag },
+  { label: "강사관리", href: "/admin/teacher-management", icon: ChalkboardTeacher },
   { label: "강의 부여", href: "/admin/assign-course", icon: GraduationCap },
   { label: "쿠폰 발급", href: "/admin/coupons", icon: Ticket },
   { label: "AI 피드백", href: "/admin/ai-feedback", icon: Robot },
   { label: "마케팅 어드민", href: "/admin/marketing", icon: Megaphone },
-];
-
-const teacherSubMenus = [
-  { label: "수강 관리", suffix: "students", icon: Users },
-  { label: "학생 정보", suffix: "student-info", icon: BookOpen },
-  { label: "강의 등록", suffix: "courses", icon: GraduationCap },
 ];
 
 const bookMenuItems = [
@@ -92,7 +85,6 @@ export default function Sidebar() {
         collapsed ? "w-16" : "w-64"
       }`}
     >
-      {/* 로고 */}
       <div className="flex items-center h-14 px-4 border-b border-admin-border">
         {!collapsed && (
           <span className="text-lg font-bold text-white tracking-tight">
@@ -101,39 +93,23 @@ export default function Sidebar() {
         )}
       </div>
 
-      {/* 메뉴 */}
       <nav className="flex-1 overflow-y-auto py-3">
-        {/* 공통 메뉴 */}
         <div className="mb-4">
           {renderSectionLabel("공통")}
           {commonMenuItems.map((item) => renderMenuLink(item.href, item.label, item.icon))}
         </div>
 
-        {/* 강사별 메뉴 */}
-        {mockTeachers.map((teacher) => (
-          <div key={teacher.id} className="mb-3">
-            {renderSectionLabel(teacher.name)}
-            {teacherSubMenus.map((sub) => {
-              const href = `/admin/teachers/${teacher.id}/${sub.suffix}`;
-              return renderMenuLink(href, sub.label, sub.icon);
-            })}
-          </div>
-        ))}
-
-        {/* 도서 판매 */}
         <div className="mb-3">
           {renderSectionLabel("도서 판매")}
           {bookMenuItems.map((item) => renderMenuLink(item.href, item.label, item.icon))}
         </div>
 
-        {/* 내신인강 플랫폼 */}
         <div className="mb-3">
           {renderSectionLabel("내신인강 플랫폼")}
           {platformMenuItems.map((item) => renderMenuLink(item.href, item.label, item.icon))}
         </div>
       </nav>
 
-      {/* 외부 사이트 연결 */}
       <div className="mb-3 px-4 pt-2 border-t border-admin-border">
         {renderSectionLabel("사이트 바로가기")}
         <a
@@ -156,7 +132,6 @@ export default function Sidebar() {
         </a>
       </div>
 
-      {/* 접기/펼치기 */}
       <button
         onClick={() => setCollapsed(!collapsed)}
         className="flex items-center justify-center gap-2 h-10 border-t border-admin-border text-admin-text-muted hover:text-admin-text transition-colors text-sm"
