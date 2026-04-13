@@ -23,6 +23,7 @@ import {
   ChartBar,
   UserCircleGear,
   ArrowSquareOut,
+  SignOut,
 } from "@phosphor-icons/react";
 
 const commonMenuItems = [
@@ -131,6 +132,14 @@ export default function Sidebar() {
           {!collapsed && <span>강사용 사이트 ↗</span>}
         </a>
       </div>
+
+      <Link
+        href="/login"
+        className="flex items-center justify-center gap-2 h-10 border-t border-admin-border text-admin-text-muted hover:text-red-400 transition-colors text-sm"
+      >
+        <SignOut size={16} weight="light" />
+        {!collapsed && <span>로그아웃</span>}
+      </Link>
 
       <button
         onClick={() => setCollapsed(!collapsed)}
